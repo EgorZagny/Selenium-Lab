@@ -10,7 +10,7 @@ using OpenQA.Selenium.Support.UI;
 namespace chromeDriverLab
 {
     [TestFixture]
-    public class Class1
+    public class TestClass
     {
         private ChromeDriver driver;
         private string url = "https://bfmereforged.org/";
@@ -61,6 +61,38 @@ namespace chromeDriverLab
             {
                 Assert.AreEqual(sections[i].GetAttribute("innerText"), names[i]);
             }
+        }
+        [Test]
+        public void TestSearch1()
+        {
+            driver.FindElementById("search-button").Click();
+            var input = driver.FindElementById("s1");
+            input.Click();
+            input.SendKeys("isengard");
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(7);
+            var results = driver.FindElementsByCssSelector("#search-results-header a");
+            bool b = false;
+            foreach(var result in results)
+            {
+                if(result.GetAttribute("href") == url + "isengard/")
+                {
+                    Assert.IsTrue(true);
+                    b = true;
+                    break;
+                }
+            }
+            if (!b) Assert.IsTrue(false);
+        }
+        [Test]
+        public void TestSearch2()
+        {
+            driver.FindElementById("search-button").Click();
+            var input = driver.FindElementById("s1");
+            input.Click();
+            input.SendKeys("dorwinion");
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(8);
+            var result = driver.FindElementByCssSelector("#search-results-header h2");
+            Assert.AreEqual(result.GetAttribute("innerText"), "No results found.");
         }
     }
 }
