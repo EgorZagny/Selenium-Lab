@@ -13,7 +13,7 @@ namespace chromeDriverLab
     public class TestClass
     {
         private ChromeDriver driver;
-        private string url = "https://bfmereforged.org/";
+        private readonly string url = "https://bfmereforged.org/";
 
         [SetUp]
         public void Init()
@@ -43,9 +43,9 @@ namespace chromeDriverLab
             driver.FindElementById("menu-item-11969").Click();
             var links = driver.FindElementsByCssSelector("#works a");
             string[] factions = { "isengard", "factions/elves", "factions/mordor" };
-            for(int i = 0; i < factions.Length; i++)
+            for (int i = 0; i < factions.Length; i++)
             {
-                Assert.AreEqual(links[i].GetAttribute("href"), url + factions[i] +'/');
+                Assert.AreEqual(links[i].GetAttribute("href"), url + factions[i] + '/');
             }
         }
         [Test]
@@ -55,7 +55,7 @@ namespace chromeDriverLab
             driver.FindElementByCssSelector("#works a").Click();
             new WebDriverWait(driver, TimeSpan.FromSeconds(20));
             var sections = driver.FindElementsByClassName("elementor-button-text");
-            string[] names = { "About faction", "Units", "Heroes", "Buildings", "Spellbook"};
+            string[] names = { "About faction", "Units", "Heroes", "Buildings", "Spellbook" };
             Assert.AreEqual(sections.Count, names.Length);
             for (int i = 0; i < names.Length; i++)
             {
@@ -72,9 +72,9 @@ namespace chromeDriverLab
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(7);
             var results = driver.FindElementsByCssSelector("#search-results-header a");
             bool b = false;
-            foreach(var result in results)
+            foreach (var result in results)
             {
-                if(result.GetAttribute("href") == url + "isengard/")
+                if (result.GetAttribute("href") == url + "isengard/")
                 {
                     Assert.IsTrue(true);
                     b = true;
@@ -93,6 +93,42 @@ namespace chromeDriverLab
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(8);
             var result = driver.FindElementByCssSelector("#search-results-header h2");
             Assert.AreEqual(result.GetAttribute("innerText"), "No results found.");
+        }
+        [Test]
+        public void TestMoreInfoSocial()
+        {
+            driver.FindElementById("side-menu-switch").Click();
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(2);
+            var links = driver.FindElementsByCssSelector("#a13-social-icons-3 a");
+            string[] social = { "www.facebook.com", "bfmereforged.org/support-us/", "www.youtube.com" };
+            for (int i = 0; i < social.Length; i++)
+            {
+                Assert.IsTrue(links[i].GetAttribute("href").Contains(social[i]));
+            }
+        }
+        [Test]
+        public void TestMoreInfoCateg()
+        {
+            driver.FindElementById("side-menu-switch").Click();
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(2);
+            var links = driver.FindElementsByCssSelector("#categories-5 a");
+            string[] categories = { "News", "Others", "Post", "Uncategorized" };
+            for (int i = 0; i < categories.Length; i++)
+            {
+                Assert.AreEqual(links[i].GetAttribute("innerText"), categories[i]);
+            }
+        }
+        [Test]
+        public void TestMoreInfoMeta()
+        {
+            driver.FindElementById("side-menu-switch").Click();
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(2);
+            var links = driver.FindElementsByCssSelector("#meta-5 a");
+            string[] categories = { "Log in", "Entries RSS", "Comments RSS", "WordPress.org" };
+            for (int i = 0; i < categories.Length; i++)
+            {
+                Assert.AreEqual(links[i].GetAttribute("innerText"), categories[i]);
+            }
         }
     }
 }
